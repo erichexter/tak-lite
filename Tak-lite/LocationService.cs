@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tak_lite
 {
-    
-    internal class LocationService
+    public class LocationService
     {
         private CancellationTokenSource _cancelTokenSource;
         private bool _isCheckingLocation;
@@ -18,7 +17,7 @@ namespace Tak_lite
             {
                 _isCheckingLocation = true;
 
-                GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(10));
 
                 _cancelTokenSource = new CancellationTokenSource();
 

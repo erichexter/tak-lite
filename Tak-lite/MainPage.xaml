@@ -1,41 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Tak_lite.MainPage">
+             xmlns:map="clr-namespace:Syncfusion.Maui.Maps;assembly=Syncfusion.Maui.Maps"
+             x:Class="Tak_lite.MainPage" 
+             xmlns:viewmodel="clr-namespace:Tak_lite"
+             x:DataType="viewmodel:MainViewModel"
+             >
 
-    <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
-
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Hello, .Net Maui!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-
-        </VerticalStackLayout>
-    </ScrollView>
-
+            <Grid VerticalOptions="Fill" HorizontalOptions="Fill" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <map:SfMaps  Grid.Row="1"  VerticalOptions="Fill"  >
+                    <map:SfMaps.Layer   >
+                        <map:MapTileLayer 
+                            x:Name="MapTileLayer" 
+                            UrlTemplate="http://mt1.google.com/vt/lyrs=y&amp;x={x}&amp;y={y}&amp;z={z}"    
+                            Center="{Binding Center}"
+                            ZoomPanBehavior="{Binding MapZoomPanBehavior}"
+                            Markers="{Binding Markers}"
+                            CanCacheTiles="True"
+                            EnableCenterAnimation="True"
+                            EnableZoomingAnimation="True"
+                            ></map:MapTileLayer>
+                    </map:SfMaps.Layer>
+                </map:SfMaps> 
+                <Button
+                    ZIndex="4"
+                    x:Name="CounterBtn"
+                    HeightRequest="10"
+                    WidthRequest="30"
+                    SemanticProperties.Hint="Counts the number of times you click"
+                    Clicked="OnCounterClicked"
+                    Command="{Binding CenterMapCommand}"
+                     />
+</Grid>
 </ContentPage>

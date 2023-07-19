@@ -49,15 +49,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="dpp.cot" Version="1.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="7.0.92" />
+		<PackageReference Include="Syncfusion.Maui.Maps" Version="22.1.38" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Reference Include="Tak.Client">
 	    <HintPath>..\..\Tak.Client\Tak.Client\bin\Debug\net7.0\Tak.Client.dll</HintPath>
 	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Main\" />
 	</ItemGroup>
 
 </Project>

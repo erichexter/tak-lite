@@ -1,56 +1,60 @@
 ﻿using System.Diagnostics;
 using System.Text.Json.Serialization;
-using ABI.Windows.Devices.PointOfService.Provider;
+
 using dpp.cot;
+using Syncfusion.Maui.Maps;
 using TheBentern.Tak.Client;
 
 namespace Tak_lite;
 
 public partial class MainPage : ContentPage
 {
-    private Location location;
+
     private TakClient client;
 
-	int count = 0;
 
-	public MainPage()
+	public MainPage(MainViewModel vm)
 	{
-		InitializeComponent();
-	}
 
-    
-	private async void OnCounterClicked(object sender, EventArgs e)
+        InitializeComponent();
+        vm.MapTileLayer = this.MapTileLayer;
+        vm.Load();
+        BindingContext = vm;
+    }
+
+
+    private async void OnCounterClicked(object sender, EventArgs e)
     {
         
-        var ls = new LocationService();
-        location = await ls.GetCurrentLocation();
+     
+        //CenterMap();
 
-        client = new TakClient("c:\\atak.zip");
+        //client = new TakClient("c:\\atak.zip");
         //await client.ConnectAsync();
         //await client.SendAsync(getEvent());
 
-        
-        await client.ListenAsync(ReceivedCoTEvent);
+
+//        await client.ListenAsync(ReceivedCoTEvent);
     }
 
-    private Message getEvent()
-    {
-        return new Message()
-        {
-            Event = new Event()
-            {
-                Detail = new Detail()
-                {
-                    Contact = new dpp.cot.Contact(){Callsign = "foobar"}
+    //private Message getEvent()
+    //{
+    //    return new Message()
+    //    {
+    //        Event = new Event()
+    //        {
+    //            Detail = new Detail()
+    //            {
+    //                Contact = new dpp.cot.Contact(){Callsign = "foobar"}
 
-                },
-                Point = new dpp.cot.Point
-                {
-                    Lat = location.Latitude,Lon = location.Longitude
-                }
-            }
-        };
-    }
+    //            },
+    //            Point = new dpp.cot.Point
+    //            {
+    //                Lat = location.Latitude,Lon = location.Longitude
+    //            }
+    //        }
+    //    };
+    //}
 
     private Task ReceivedCoTEvent(Event arg)
     {
