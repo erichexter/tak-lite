@@ -2,10 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
-		<integer>2</integer>
 	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
@@ -26,5 +27,29 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>MKDirectionsRequest</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.apple.maps.directionsrequest</string>
+			</array>
+		</dict>
+	</array>
+  <key>NSLocationTemporaryUsageDescriptionDictionary</key>
+  <array>
+    <dict>
+      <key>TemporaryFullAccuracyUsageDescription</key>
+      <string>Fill in a reason why your app needs full accuracy</string>
+    </dict>
+  </array>
 </dict>
 </plist>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,11 +18,29 @@ namespace Tak_lite
             {
                 _isCheckingLocation = true;
 
-                GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(10));
 
-                _cancelTokenSource = new CancellationTokenSource();
+                var locationTaskCompletionSource = new TaskCompletionSource<Location>();
 
-                Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    PermissionStatus status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                    if (status != PermissionStatus.Granted)
+                    {
+                        status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                    }
+
+
+                    GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(10));
+
+                    _cancelTokenSource = new CancellationTokenSource();
+                
+                    Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
+
+                    locationTaskCompletionSource.SetResult(location);
+                });
+
+                var location = await locationTaskCompletionSource.Task;
+
 
                 if (location != null)
                 {
@@ -35,7 +54,7 @@ namespace Tak_lite
             //   PermissionException
             catch (Exception ex)
             {
-                // Unable to get location
+                Debug.WriteLine(ex );
             }
             finally
             {

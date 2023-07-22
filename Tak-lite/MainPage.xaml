@@ -1,39 +1,95 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:map="clr-namespace:Syncfusion.Maui.Maps;assembly=Syncfusion.Maui.Maps"
-             x:Class="Tak_lite.MainPage" 
+             x:Class="Tak_lite.MainPage"
              xmlns:viewmodel="clr-namespace:Tak_lite"
-             x:DataType="viewmodel:MainViewModel"
-             >
+             xmlns:helper="clr-namespace:Maui.Helpers"
+             x:DataType="viewmodel:MainViewModel">
 
-            <Grid VerticalOptions="Fill" HorizontalOptions="Fill" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <map:SfMaps  Grid.Row="1"  VerticalOptions="Fill"  >
-                    <map:SfMaps.Layer   >
-                        <map:MapTileLayer 
-                            x:Name="MapTileLayer" 
-                            UrlTemplate="http://mt1.google.com/vt/lyrs=y&amp;x={x}&amp;y={y}&amp;z={z}"    
-                            Center="{Binding Center}"
-                            ZoomPanBehavior="{Binding MapZoomPanBehavior}"
-                            Markers="{Binding Markers}"
-                            CanCacheTiles="True"
-                            EnableCenterAnimation="True"
-                            EnableZoomingAnimation="True"
-                            ></map:MapTileLayer>
-                    </map:SfMaps.Layer>
-                </map:SfMaps> 
-                <Button
-                    ZIndex="4"
-                    x:Name="CounterBtn"
-                    HeightRequest="10"
-                    WidthRequest="30"
-                    SemanticProperties.Hint="Counts the number of times you click"
-                    Clicked="OnCounterClicked"
-                    Command="{Binding CenterMapCommand}"
-                     />
-</Grid>
+    <Grid VerticalOptions="Fill" HorizontalOptions="Fill">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <map:SfMaps Grid.ColumnSpan="2" VerticalOptions="Fill">
+            <map:SfMaps.Layer>
+                <map:MapTileLayer
+
+                    x:Name="MapTileLayer"
+                    UrlTemplate="{Binding MapTilesUrl}"
+                    Center="{Binding Center}"
+                    ZoomPanBehavior="{Binding MapZoomPanBehavior}"
+                    Markers="{Binding Markers}"
+                    CanCacheTiles="False"
+                    EnableCenterAnimation="True"
+                    EnableZoomingAnimation="True" />
+            </map:SfMaps.Layer>
+        </map:SfMaps>
+        <StackLayout Grid.Column="1" Margin="0" Padding="0" VerticalOptions="Center" HorizontalOptions="End">
+            <ImageButton
+                x:Name="CenterBtn"
+                BackgroundColor=" #00FFFFFF"
+                IsOpaque="False"
+                Margin="25"
+                ZIndex="4"
+                HeightRequest="60"
+                WidthRequest="50"
+                Padding="0"
+                BorderWidth="0"
+                Opacity="1"
+                Command="{Binding CenterMapCommand}">
+                <ImageButton.Source  >
+                    <FontImageSource
+                        FontFamily="MaterialDesignIcons"
+                        Glyph="{x:Static helper:IconFont.Near_me}"
+                        Color="Aqua" 
+                        Size="40"
+                        />
+                </ImageButton.Source>
+            </ImageButton>
+            <ImageButton
+                x:Name="AtakBtn"
+                BackgroundColor=" #00FFFFFF"
+                IsOpaque="False"
+                Margin="25"
+                ZIndex="4"
+                HeightRequest="60"
+                WidthRequest="70"
+                Padding="0"
+                BorderWidth="0"
+                Opacity="1"
+
+                Command="{Binding AtakServerFileCommand}" >
+            <ImageButton.Source  >
+                <FontImageSource
+                    FontFamily="MaterialDesignIcons"
+                    Glyph="{x:Static helper:IconFont.Cloud_sync}"
+                    Color="Aqua" 
+                    Size="30"
+                />
+            </ImageButton.Source>
+            </ImageButton>
+
+
+        </StackLayout>
+        <StackLayout Grid.Column="1" VerticalOptions="End">
+            <Border Margin="10" Opacity=".7" VerticalOptions="End" BackgroundColor="Black" WidthRequest="200"
+                    HeightRequest="100" Padding="10">
+                <VerticalStackLayout VerticalOptions="Fill">
+                    <HorizontalStackLayout>
+                        <Label Text="Callsign:  " TextColor="Yellow" FontAttributes="Bold" />
+                        <Label x:Name="lblCallSign" Text="{Binding Callsign}" TextColor="Yellow" FontAttributes="Bold" />
+                    </HorizontalStackLayout>
+                    <Label x:Name="lblLocation" Text="Location:" TextColor="Yellow" FontAttributes="Bold"
+                           VerticalOptions="End" />
+                </VerticalStackLayout>
+            </Border>
+        </StackLayout>
+
+    </Grid>
 </ContentPage>

@@ -49,8 +49,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="atak.zip" />
+	  <None Remove="Platforms\Android\Resources\network_security_config.xml" />
+	  <None Remove="Resources\Fonts\MaterialIcons-Regular.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="dpp.cot" Version="1.0.4" />
+		<PackageReference Include="EcoCore" Version="7.0.0.14875" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="7.0.92" />
 		<PackageReference Include="Syncfusion.Maui.Maps" Version="22.1.38" />
@@ -65,5 +72,25 @@
 	<ItemGroup>
 	  <Folder Include="Main\" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiAsset Include="atak.zip">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </MauiAsset>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AndroidResource Update="Platforms\Android\Resources\xml\network_security_config.xml">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </AndroidResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="NewPage1.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionTakliteHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>
