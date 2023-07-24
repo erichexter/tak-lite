@@ -2,6 +2,7 @@
 using Syncfusion.Maui.Core.Hosting;
 using Tak_lite.Service;
 
+
 namespace Tak_lite;
 
 public static class MauiProgram
@@ -20,6 +21,8 @@ public static class MauiProgram
             .UseMauiMaps()
             .ConfigureSyncfusionCore()
             ;
+        builder.Services.AddSingleton<ConfigurationPage>();
+        builder.Services.AddSingleton<ConfigurationViewModel>();
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddTransient<LocationService>();

@@ -78,6 +78,11 @@ public partial class MainViewModel : ObservableObject
         if(location != null)
             SetLocation(location);
     }
+    [RelayCommand]
+    private async Task UserConfig()
+    {
+        await Shell.Current.GoToAsync(nameof(ConfigurationPage));
+    }
 
     [RelayCommand]
     private void CenterMap()

@@ -65,14 +65,34 @@
                 Opacity="1"
 
                 Command="{Binding AtakServerFileCommand}" >
-            <ImageButton.Source  >
+            <ImageButton.Source >
                 <FontImageSource
                     FontFamily="MaterialDesignIcons"
                     Glyph="{x:Static helper:IconFont.Cloud_sync}"
                     Color="Aqua" 
                     Size="30"
-                />
-            </ImageButton.Source>
+                /></ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton
+                x:Name="OptionsBtn"
+                BackgroundColor=" #00FFFFFF"
+                IsOpaque="False"
+                Margin="25"
+                ZIndex="4"
+                HeightRequest="60"
+                WidthRequest="70"
+                Padding="0"
+                BorderWidth="0"
+                Opacity="1"
+                Command="{Binding UserConfigCommand}" >
+                <ImageButton.Source >
+                    <FontImageSource
+                        FontFamily="MaterialDesignIcons"
+                        Glyph="{x:Static helper:IconFont.Settings}"
+                        Color="Aqua" 
+                        Size="30"
+                    /></ImageButton.Source>
             </ImageButton>
 
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tak_lite.ConfigurationPage"
+             Title="Configuration"
+             xmlns:viewmodel="clr-namespace:Tak_lite"
+             x:DataType="viewmodel:ConfigurationViewModel">
+    <VerticalStackLayout>
+        <Label 
+            Text="Callsign"
+            VerticalOptions="Center" 
+            HorizontalOptions="Start" />
+        <Entry Placeholder="Callsign" Text="{Binding Callsign}"
+            ></Entry>
+        <Label Text="Team"></Label>
+        <Picker SelectedItem="{Binding Team}" >
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Green</x:String>
+                    <x:String>Blue</x:String>
+                    <x:String>Red</x:String>
+                    <x:String>Purple</x:String>
+                    <x:String>Yellow</x:String>
+                </x:Array>
+
+            </Picker.ItemsSource>
+
+        </Picker>
+        <Label Text="Role"></Label>
+        <Picker  SelectedItem="{Binding Role}" >
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Team Member</x:String>
+                    <x:String>Team Lead</x:String>
+                    <x:String>RTO</x:String>
+                    <x:String>Medic</x:String>
+                    <x:String>Yellow</x:String>
+                </x:Array>
+
+            </Picker.ItemsSource>
+        </Picker>
+        <Button Text="Save"></Button>
+    </VerticalStackLayout>
+</ContentPage>
