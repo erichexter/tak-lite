@@ -60,6 +60,7 @@
 		<PackageReference Include="EcoCore" Version="7.0.0.14875" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="7.0.92" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Syncfusion.Maui.Maps" Version="22.1.38" />
 	</ItemGroup>
 
@@ -86,13 +87,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Configuration.xaml.cs">
-	    <DependentUpon>Configuration.xaml</DependentUpon>
+	  <Compile Update="ConfigPreferencesPage.xaml.cs">
+	    <DependentUpon>ConfigPreferencesPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="ConfigTakServerListPage.xaml.cs">
+	    <DependentUpon>ConfigTakServerListPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Configuration.xaml">
+	  <MauiXaml Update="ConfigListingPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ConfigPreferencesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ConfigTakServerDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ConfigTakServerListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

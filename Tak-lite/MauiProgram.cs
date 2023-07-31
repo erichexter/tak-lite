@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Core.Hosting;
 using Tak_lite.Service;
+using Tak_lite.ViewModels;
 
 
 namespace Tak_lite;
@@ -21,12 +23,22 @@ public static class MauiProgram
             .UseMauiMaps()
             .ConfigureSyncfusionCore()
             ;
-        builder.Services.AddSingleton<ConfigurationPage>();
-        builder.Services.AddSingleton<ConfigurationViewModel>();
+
+        builder.Services.AddTransient<ConfigTakServerDetailViewModel>();
+        builder.Services.AddTransient<ConfigTakServerDetailPage>();
+        builder.Services.AddTransient<ConfigTakServerListPage>();
+        builder.Services.AddTransient<ConfigTakServerListViewModel>();
+        builder.Services.AddSingleton<ConfigListingPage>();
+        builder.Services.AddSingleton<ConfigListViewModel>();
+        builder.Services.AddSingleton<ConfigPreferencesPage>();
+        builder.Services.AddSingleton<ConfigPreferencesViewModel>();
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddTransient<LocationService>();
-        builder.Services.AddTransient<TakService>();
+        builder.Services.AddTransient<TakServiceInstance>();
+        builder.Services.AddSingleton<DataService>();
+        builder.Services.AddSingleton<IMessenger>(provider => WeakReferenceMessenger.Default);
+
 		
 #if DEBUG
 		builder.Logging.AddDebug();

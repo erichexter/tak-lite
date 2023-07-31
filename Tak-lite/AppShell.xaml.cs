@@ -6,6 +6,9 @@ public partial class AppShell : Shell
 	{
 		InitializeComponent();
 
-		Routing.RegisterRoute(nameof(ConfigurationPage),typeof(ConfigurationPage));
-	}
+        Routing.RegisterRoute(nameof(ConfigPreferencesPage), typeof(ConfigPreferencesPage));
+        Routing.RegisterRoute(nameof(ConfigListingPage), typeof(ConfigListingPage));
+        Routing.RegisterRoute(nameof(ConfigTakServerDetailPage), typeof(ConfigTakServerDetailPage));
+        Routing.RegisterRoute(nameof(ConfigTakServerListPage), typeof(ConfigTakServerListPage));
+    }
 }

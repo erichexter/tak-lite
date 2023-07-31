@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tak_lite.ConfigTakServerListPage"
+             xmlns:viewModels="clr-namespace:Tak_lite.ViewModels"
+             
+             >
+    <VerticalStackLayout>
+        <ListView ItemsSource="{Binding Servers}" Margin="20">
+            <ListView.ItemTemplate>
+                
+                <DataTemplate  >
+                    <TextCell TextColor="Black" DetailColor="DarkGray" Text="{Binding Path=Name }" Detail="{Binding Server}">
+                    </TextCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Margin="30" WidthRequest="150" Text="Add New" Command="{Binding CreateCommand}"></Button>
+    </VerticalStackLayout>
+</ContentPage>

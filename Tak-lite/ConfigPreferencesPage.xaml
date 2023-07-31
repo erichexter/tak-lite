@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Tak_lite.ConfigurationPage"
+             x:Class="Tak_lite.ConfigPreferencesPage"
              Title="Configuration"
              xmlns:viewmodel="clr-namespace:Tak_lite"
-             x:DataType="viewmodel:ConfigurationViewModel">
+             x:DataType="viewmodel:ConfigPreferencesViewModel">
     <VerticalStackLayout>
         <Label 
             Text="Callsign"
@@ -39,6 +39,6 @@
 
             </Picker.ItemsSource>
         </Picker>
-        <Button Text="Save"></Button>
+        <Button Text="Save" Command="{Binding SaveCommand}"></Button>
     </VerticalStackLayout>
 </ContentPage>

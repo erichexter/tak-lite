@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tak_lite.ConfigTakServerDetailPage"
+             xmlns:viewModels="clr-namespace:Tak_lite.ViewModels"
+             x:DataType="viewModels:ConfigTakServerDetailViewModel"
+             Title="ConfigTakServerDetailPage" >
+
+    <VerticalStackLayout Padding="10" Margin="10">
+            <HorizontalStackLayout VerticalOptions="Center">
+            <Label Text="Load from Zipfile:   "></Label><Label WidthRequest="100" Text="{Binding ZipfilePath}"></Label>
+            <Button WidthRequest="100" Text="Select File" Command="{Binding OpenFileCommand}"></Button>
+            </HorizontalStackLayout>
+            <!--<Entry Text="{Binding ZipfilePath}"></Entry>-->
+            <Label Text="Enabled"></Label>
+            <Switch  IsToggled="{Binding Enabled}"></Switch>
+            <Label Text="Name"></Label>
+            <Entry Text="{Binding Name}"></Entry>
+            <Label Text="Server"></Label>
+            <Entry Text="{Binding Server}"></Entry>
+            <Label Text="Port"></Label>
+            <Entry Text="{Binding Port}"></Entry>
+            <Label Text="Protocol"></Label>
+            <Entry Text="{Binding Protocol}"></Entry>
+            <Label Text="Username"></Label>
+            <Entry Text="{Binding Username}"></Entry>
+            <Label Text="Password"></Label>
+            <Entry Text="{Binding Password}"></Entry>
+            <Button x:Name="btnSave" Margin="10"  Text="Save" IsEnabled="True" Command="{Binding SaveServerCommand}"></Button>
+        </VerticalStackLayout>
+</ContentPage>

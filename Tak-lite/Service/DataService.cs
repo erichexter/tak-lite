@@ -1,19 +1,19 @@
-﻿using AVFoundation;
+﻿using Newtonsoft.Json;
+using Tak_lite.ViewModels;
 
 namespace Tak_lite.Service;
 
 public class DataService
 {
     private readonly string filePath;
-     private readonly string settingsPath;
+    private readonly string settingsPath;
 
-     public DataService()
+    public DataService()
     {
         filePath = FileSystem.AppDataDirectory;
         settingsPath = Path.Combine(filePath, "settings.json");
     }
 
-    
 
     public AppSettings GetAppSettings()
     {
@@ -23,12 +23,17 @@ public class DataService
             Save(appSettings);
             return appSettings;
         }
-
-        return null;
+        else
+        {
+            var appSettings = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(settingsPath));
+            return appSettings;
+        }
     }
 
     public void Save(AppSettings setting)
     {
+        var serialized = JsonConvert.SerializeObject(setting);
+        File.WriteAllText(settingsPath, serialized);
     }
 }
 
@@ -37,4 +42,5 @@ public class AppSettings
     public string Callsign;
     public string Role;
     public string Team;
+    public List<TakServer> Servers { get; set; }=new List<TakServer>();
 }
