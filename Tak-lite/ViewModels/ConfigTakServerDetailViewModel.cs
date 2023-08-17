@@ -10,6 +10,7 @@ public partial class ConfigTakServerDetailViewModel : ObservableObject
 {
     private readonly DataService _dataService;
 
+    [ObservableProperty] public string id=Guid.NewGuid().ToString();
     [ObservableProperty] public bool enabled;
 
     [ObservableProperty] public string name;
@@ -103,6 +104,10 @@ public partial class ConfigTakServerDetailViewModel : ObservableObject
         //btnSave.IsEnabled = fa;
 
         var appSettings = _dataService.GetAppSettings();
+        if (_dataService.GetAppSettings().Servers.Exists(a => a.Id == id))
+        {
+            appSettings.Servers.Remove(appSettings.Servers.Single(a => a.Id == id));
+        }
         appSettings.Servers.Add(new TakServer
         {
             Enabled = enabled,
@@ -112,11 +117,26 @@ public partial class ConfigTakServerDetailViewModel : ObservableObject
             Protocol = protocol,
             Server = server,
             Username = username,
-            ZipfilePath = zipfilePath
+            ZipfilePath = zipfilePath,
+            Id=id,
         });
         _dataService.Save(appSettings);
 
         await Shell.Current.GoToAsync("..");
+    }
+
+    public void LoadFromId(string id)
+    {
+        var server=_dataService.GetAppSettings().Servers.SingleOrDefault(a => a.Id == id);
+        Enabled = server.Enabled;
+        Name = server.Name;
+        Password = server.Password;
+        Port = server.Port;
+        Protocol = server.Protocol;
+        Username = server.Username;
+        ZipfilePath = server.ZipfilePath;
+        Id = server.Id;
+        Server = server.Server;
     }
 }
 

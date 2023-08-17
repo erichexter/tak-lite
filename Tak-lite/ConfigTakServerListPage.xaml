@@ -6,11 +6,13 @@
              
              >
     <VerticalStackLayout>
-        <ListView ItemsSource="{Binding Servers}" Margin="20">
+        <ListView ItemsSource="{Binding Servers}" Margin="20" ItemTapped="ListView_OnItemTapped">
             <ListView.ItemTemplate>
                 
                 <DataTemplate  >
-                    <TextCell TextColor="Black" DetailColor="DarkGray" Text="{Binding Path=Name }" Detail="{Binding Server}">
+                    <TextCell TextColor="Black" DetailColor="DarkGray" Text="{Binding Path=Name }" Detail="{Binding Server}"  
+                               
+                              >
                     </TextCell>
                 </DataTemplate>
             </ListView.ItemTemplate>

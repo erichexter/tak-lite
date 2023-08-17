@@ -30,10 +30,17 @@ public partial class ConfigTakServerListViewModel : ObservableObject
     {
         await Shell.Current.GoToAsync(nameof(ConfigTakServerDetailPage));
     }
+
+    [RelayCommand]
+    public async Task Edit(object id)
+    {
+        await Shell.Current.GoToAsync(nameof(ConfigTakServerDetailPage), new Dictionary<string, object>{ { $"id", id }} );
+    }
 }
 
 public partial class TakServer
 {
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Name { get; set; }
     public bool Enabled { get; set; } = true;
     public string Server { get; set; }

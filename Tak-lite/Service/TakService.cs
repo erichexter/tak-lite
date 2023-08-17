@@ -2,11 +2,33 @@
 
 public class TakService
 {
+    private readonly DataService _dataService;
     private TakContact _contact;
     public List<TakServiceInstance> Servers { get; private set; }=new();
 
+    public TakService(DataService dataService)
+    {
+        _dataService = dataService;
+        
+    }
+
+    public bool IsConnected()
+    {
+        return Servers.Any(a => a.IsConnected);
+    }
+
+    public void LoadServer()
+    {
+        Servers.Clear();
+        Servers.AddRange(_dataService.GetAppSettings().Servers.Select(a=>new TakServiceInstance(){ConfigurationServer = a,Callback = Callback}));
+    }
+
+    public Action<TakContact> Callback;
+    
+
     public void Connect()
     {
+        
         foreach (var server in Servers)
         {
             if (!server.IsConnected && server.ConfigurationServer.Enabled)

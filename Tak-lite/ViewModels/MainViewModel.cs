@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Timers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -8,19 +9,19 @@ using Timer = System.Timers.Timer;
 
 namespace Tak_lite;
 
-public partial class MainViewModel : ObservableObject,IRecipient<PreferencesUpdatedMessage>
+public partial class MainViewModel : ObservableObject, IRecipient<PreferencesUpdatedMessage>
 {
-    Timer _timer;
-    private readonly LocationService _locationService;
-    private readonly TakServiceInstance _takServiceInstance;
     private readonly DataService _dataService;
+    private readonly LocationService _locationService;
     private readonly IMessenger _messenger;
+    private readonly TakService _takService;
+    private Timer _timer;
+
+    [ObservableProperty] private string callsign;
     [ObservableProperty] private MapLatLng center;
 
     private ObservableCollection<MapSublayer> Layers = new();
 
-    [ObservableProperty] private string callsign;
-    
 
     //[ObservableProperty]
     private Location location;
@@ -33,47 +34,58 @@ public partial class MainViewModel : ObservableObject,IRecipient<PreferencesUpda
 
     [ObservableProperty] private ObservableCollection<ATAKMapMarker> markers = new();
 
-    public MainViewModel(LocationService locationService, TakServiceInstance takServiceInstance,DataService dataService,IMessenger messenger)
+    public MainViewModel(LocationService locationService, TakService takService,
+        DataService dataService, IMessenger messenger)
     {
         _locationService = locationService;
-        _takServiceInstance = takServiceInstance;
+        _takService = takService;
+        
         _dataService = dataService;
         _messenger = messenger;
-        _takServiceInstance.Callback = OnTakContact;
-        _messenger.Register<PreferencesUpdatedMessage>(this);
+        _takService.Callback = OnTakContact;
+        //akServiceInstance.Callback = OnTakContact;
+        _messenger.Register(this);
     }
 
     public MapTileLayer MapTileLayer { get; set; }
+
+    public void Receive(PreferencesUpdatedMessage message)
+    {
+        var settings = _dataService.GetAppSettings();
+        Callsign = settings.Callsign;
+    }
 
     private void OnTakContact(TakContact obj)
     {
         var marker = markers.FirstOrDefault(a => a.UUID == obj.UUID);
         if (marker != null)
         {
-            if (obj.Callsign == null)//remove the marker.
+            if (obj.Callsign == null) //remove the marker.
             {
-
             }
             else
             {
                 marker.Latitude = obj.Point.Lat;
                 marker.Longitude = obj.Point.Lon;
+                marker.TakContact= obj;
             }
         }
         else
         {
             markers.Add(new ATAKMapMarker
             {
-                UUID=obj.UUID,
-                CallSign = obj.Callsign, 
-                Latitude = obj.Point.Lat, 
-                Longitude = obj.Point.Lon, 
+                UUID = obj.UUID,
+                CallSign = obj.Callsign,
+                Latitude = obj.Point.Lat,
+                Longitude = obj.Point.Lon,
                 Color = obj.Team,
                 Role = obj.Role,
                 IconHeight = 20,
                 IconWidth = 20,
                 IconStroke = new SolidColorBrush(Color.Parse(obj.Team)),
-                IconFill = new SolidColorBrush(Color.Parse(obj.Team))
+                IconFill = new SolidColorBrush(Color.Parse(obj.Team)),
+                SourceUid=obj.SourecUid,
+                TakContact=obj,
             });
         }
     }
@@ -81,9 +93,10 @@ public partial class MainViewModel : ObservableObject,IRecipient<PreferencesUpda
     private async void UpdateLocation()
     {
         location = await _locationService.GetCurrentLocation();
-        if(location != null)
+        if (location != null)
             SetLocation(location);
     }
+
     [RelayCommand]
     private async Task UserConfig()
     {
@@ -97,39 +110,28 @@ public partial class MainViewModel : ObservableObject,IRecipient<PreferencesUpda
         MapZoomPanBehavior = new MapZoomPanBehavior { ZoomLevel = 20, MaxZoomLevel = 25 };
     }
 
-    [RelayCommand]
-    private async void AtakServerFile()
-    {
-        var file=await FilePicker.Default.PickAsync(new PickOptions()
-        {
-            FileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-            {
-                {DevicePlatform.Android,new[]{"application/zip"}},
-                {DevicePlatform.WinUI, new []{"*.zip"}},
-                {DevicePlatform.iOS, new []{"public.archive"}},
-            })
-        });
-        if (file != null)
-        {
-            var connectionfile = file.FullPath;
 
-            _takServiceInstance.Connect(connectionfile);
-        }
-    }
-
-    private async void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+    private async void _timer_Elapsed(object sender, ElapsedEventArgs e)
     {
-        //_timer.Interval = 30000;
+        _timer.Interval = 30000;
         location = await _locationService.GetCurrentLocation();
         if (location != null)
         {
             SetLocation(location);
-            if (_takServiceInstance.IsConnected)
-            {
-                _takServiceInstance.UpdateLocation(location);
-            }
-            
+            if (_takService.IsConnected()) _takService.UpdateLocation(location);
         }
+
+        RemoveExpiredMarkers();
+    }
+
+    private void RemoveExpiredMarkers()
+    {
+        var remove = markers.Where(a => a.TakContact !=null && a.TakContact.Stale < DateTime.UtcNow).ToList();
+        foreach (var marker in remove)
+        {
+            markers.Remove(marker);
+        }
+
     }
 
     public void Load()
@@ -140,14 +142,21 @@ public partial class MainViewModel : ObservableObject,IRecipient<PreferencesUpda
         Center = new MapLatLng(0, 0);
         MapZoomPanBehavior = new MapZoomPanBehavior { ZoomLevel = 20, MaxZoomLevel = 25 };
         UpdateLocation();
-        _timer = new System.Timers.Timer();
+        _timer = new Timer();
         _timer.Interval = 1000;
         _timer.AutoReset = true;
         _timer.Elapsed += _timer_Elapsed;
         _timer.Start();
-
+        _takService.LoadServer();    
+        _takService.Connect();
+        _takService.UpdateContact(new TakContact()
+        {
+            Callsign = callsign,Role = settings.Role,Team = settings.Team,UUID = Guid.NewGuid().ToString()
+        });
+        
     }
 
+    [ObservableProperty] private string currentLocation;
     public void SetLocation(Location loc)
     {
         location = loc;
@@ -156,7 +165,7 @@ public partial class MainViewModel : ObservableObject,IRecipient<PreferencesUpda
             var marker = Markers.SingleOrDefault(a => a.UUID == "self");
             if (marker == null)
             {
-                Markers.Add(new ATAKMapMarker
+                Markers.Add(new ATAKMapMarker 
                 {
                     UUID = "self",
                     CallSign = "self",
@@ -175,13 +184,8 @@ public partial class MainViewModel : ObservableObject,IRecipient<PreferencesUpda
             }
 
             Center = new MapLatLng(location.Latitude, location.Longitude);
+            CurrentLocation = $"Location: {location.Latitude} {location.Longitude} ";
         });
-    }
-
-    public void Receive(PreferencesUpdatedMessage message)
-    {
-        var settings = _dataService.GetAppSettings();
-        Callsign = settings.Callsign;
     }
 }
 
@@ -191,4 +195,6 @@ public class ATAKMapMarker : MapMarker
     public string Role { get; set; }
     public string Color { get; set; }
     public string UUID { get; set; }
+    public string SourceUid { get; set; }
+    public TakContact TakContact { get; set; }
 }

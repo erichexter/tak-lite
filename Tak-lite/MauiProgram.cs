@@ -38,6 +38,7 @@ public static class MauiProgram
         builder.Services.AddTransient<TakServiceInstance>();
         builder.Services.AddSingleton<DataService>();
         builder.Services.AddSingleton<IMessenger>(provider => WeakReferenceMessenger.Default);
+        builder.Services.AddSingleton<TakService>();
 
 		
 #if DEBUG

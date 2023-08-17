@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using dpp.cot;
+using Microsoft.Maui.Storage;
 using Tak_lite.ViewModels;
 using TheBentern.Tak.Client;
 using Contact = dpp.cot.Contact;
@@ -9,12 +10,14 @@ namespace Tak_lite.Service;
 
 public class TakServiceInstance
 {
+    
     private TakClient _client;
 
     private readonly List<TakContact> _contacts = new();
 
     public Action<TakContact> Callback;
-    private string uid;
+    public string Uid { get; private set; } = Guid.NewGuid().ToString();
+
     private TakContact _contact;
 
     public DateTime LastChanged { get; private set; }
@@ -25,10 +28,17 @@ public class TakServiceInstance
     public async void Connect()
     {
 
+        if (ConfigurationServer.Enabled)
+        {
+            if (!string.IsNullOrEmpty(ConfigurationServer.ZipfilePath))
+            {
+                Connect(Path.Combine(FileSystem.Current.AppDataDirectory, ConfigurationServer.ZipfilePath));
+            }
+        }
     }
     public async void Connect(string filepath)
     {
-        uid = Guid.NewGuid().ToString();
+        
         _client = new TakClient(filepath);
         try
         {
@@ -51,7 +61,7 @@ public class TakServiceInstance
                 Time = DateTime.UtcNow,
                 Start = DateTime.UtcNow,
                 Stale = DateTime.UtcNow.AddMinutes(5),
-                Uid = uid,
+                Uid = Uid,
                 Version = "2.0",
                 How = "m-g",
                 Type = "a-f-G-E-V-C",
@@ -88,6 +98,8 @@ public class TakServiceInstance
         {
             var takContact = _contacts.Single(a => a.UUID == arg.Uid);
             takContact.Point = arg?.Point;
+            takContact.Stale = arg?.Stale;
+            takContact.LastChanged = arg?.Start;
             if (Callback != null)
                 Callback(takContact);
         }
@@ -99,7 +111,10 @@ public class TakServiceInstance
                 Point = arg?.Point,
                 Team = arg?.Detail?.Group?.Name,
                 Role = arg?.Detail?.Group?.Role,
-                UUID = arg?.Uid
+                UUID = arg?.Uid,
+                SourecUid=Uid
+                ,Stale = arg?.Stale,
+                LastChanged = arg?.Start
             };
 
             _contacts.Add(takContact);
@@ -135,10 +150,13 @@ public class TakServiceInstance
 public class TakContact
 {
     public string Callsign { get; set; }
-    public Point Point { get; set; }
+    public Point Point { get; set; }=new Point(){Le = 999999,Lon = 9999999,Ce = 9999999,Hae = 9999999,Lat = 999999};
     public string Role { get; set; }
     public string Team { get; set; }
     public string UUID { get; set; }
+    public string SourecUid { get; set; }
+    public DateTime? LastChanged { get; set; }
+    public DateTime? Stale { get; set; }
 }
 
 

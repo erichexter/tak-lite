@@ -52,7 +52,7 @@
                         />
                 </ImageButton.Source>
             </ImageButton>
-            <ImageButton
+            <!--<ImageButton
                 x:Name="AtakBtn"
                 BackgroundColor=" #00FFFFFF"
                 IsOpaque="False"
@@ -65,14 +65,15 @@
                 Opacity="1"
 
                 Command="{Binding AtakServerFileCommand}" >
-            <ImageButton.Source >
+
+                <ImageButton.Source >
                 <FontImageSource
                     FontFamily="MaterialDesignIcons"
                     Glyph="{x:Static helper:IconFont.Cloud_sync}"
                     Color="Aqua" 
                     Size="30"
                 /></ImageButton.Source>
-            </ImageButton>
+            </ImageButton>-->
 
             <ImageButton
                 x:Name="OptionsBtn"
@@ -105,7 +106,7 @@
                         <Label Text="Callsign:  " TextColor="Yellow" FontAttributes="Bold" />
                         <Label x:Name="lblCallSign" Text="{Binding Callsign}" TextColor="Yellow" FontAttributes="Bold" />
                     </HorizontalStackLayout>
-                    <Label x:Name="lblLocation" Text="Location:" TextColor="Yellow" FontAttributes="Bold"
+                    <Label x:Name="lblLocation" Text="{Binding CurrentLocation}" TextColor="Yellow" FontAttributes="Bold"
                            VerticalOptions="End" />
                 </VerticalStackLayout>
             </Border>
