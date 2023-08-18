@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Xml;
 using dpp.cot;
 using Microsoft.Maui.Storage;
 using Tak_lite.ViewModels;
@@ -16,6 +17,7 @@ public class TakServiceInstance
     private readonly List<TakContact> _contacts = new();
 
     public Action<TakContact> Callback;
+    public Action<string> DisconnectCallback;
     public string Uid { get; private set; } = Guid.NewGuid().ToString();
 
     private TakContact _contact;
@@ -84,13 +86,27 @@ public class TakServiceInstance
         };
     }
 
-    private Task ReceivedCoTEvent(Event arg)
+    private Task ReceivedCoTEvent(Event1 arg)
     {
         Debug.WriteLine("received tak cot message");
         if (arg == null)
             return Task.CompletedTask;
 
-        Debug.WriteLine(arg.ToXmlString());
+        Debug.WriteLine(arg.Raw);
+
+        if (arg.Type.Equals("t-x-d-d"))
+        {
+            var xml = new XmlDocument();
+            xml.LoadXml(arg.Raw);
+            var uid = xml.DocumentElement.SelectSingleNode("/event/detail/link").Attributes["uid"].Value;
+            Debug.WriteLine(uid);
+            //delete contact.
+            if (DisconnectCallback != null)
+            {
+                DisconnectCallback(uid);
+                return Task.CompletedTask;
+            }
+        }
 
         var callsign = arg?.Detail?.Contact?.Callsign;
 

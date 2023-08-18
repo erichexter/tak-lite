@@ -20,9 +20,11 @@ public class TakService
     public void LoadServer()
     {
         Servers.Clear();
-        Servers.AddRange(_dataService.GetAppSettings().Servers.Select(a=>new TakServiceInstance(){ConfigurationServer = a,Callback = Callback}));
+        Servers.AddRange(_dataService.GetAppSettings().Servers.Select(a=>new TakServiceInstance(){ConfigurationServer = a,Callback = Callback,DisconnectCallback = DisconnectCallback}));
     }
 
+
+    public Action<string> DisconnectCallback;
     public Action<TakContact> Callback;
     
 

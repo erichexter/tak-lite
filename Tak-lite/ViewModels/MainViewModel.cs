@@ -43,8 +43,21 @@ public partial class MainViewModel : ObservableObject, IRecipient<PreferencesUpd
         _dataService = dataService;
         _messenger = messenger;
         _takService.Callback = OnTakContact;
+        _takService.DisconnectCallback = OnTakContactDisconnect;
         //akServiceInstance.Callback = OnTakContact;
         _messenger.Register(this);
+    }
+
+    private void OnTakContactDisconnect(string uid)
+    {
+        var marker = markers.FirstOrDefault(a => a.UUID == uid);
+        if (marker != null)
+        {
+            marker.IconStroke = new SolidColorBrush(Color.Parse("gray"));
+            marker.IconFill = new SolidColorBrush(Color.Parse("gray"));
+
+        }
+
     }
 
     public MapTileLayer MapTileLayer { get; set; }
