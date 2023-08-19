@@ -8,6 +8,6 @@
 
     <ShellContent
         Title="TAK Lite"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        ContentTemplate="{DataTemplate local:MainArcgisPage}"
+        Route="MainArcgisPage"/>
 </Shell>

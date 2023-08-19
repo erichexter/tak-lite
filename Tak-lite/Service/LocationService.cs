@@ -9,6 +9,7 @@ namespace Tak_lite
 {
     public class LocationService
     {
+        private bool simulate = true;
         private CancellationTokenSource _cancelTokenSource;
         private bool _isCheckingLocation;
 
@@ -35,6 +36,12 @@ namespace Tak_lite
                     _cancelTokenSource = new CancellationTokenSource();
                 
                     Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
+
+                    if (simulate)
+                    {
+                        location.Latitude += (Random.Shared.Next(10)-5) * 0.00005;
+                        location.Longitude += (Random.Shared.Next(10)-5) * 0.00005;
+                    }
 
                     locationTaskCompletionSource.SetResult(location);
                 });

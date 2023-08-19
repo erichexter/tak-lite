@@ -8,5 +8,6 @@ public partial class MainPage : ContentPage
         vm.MapTileLayer = MapTileLayer;
         vm.Load();
         BindingContext = vm;
+        
     }
 }

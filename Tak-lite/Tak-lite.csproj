@@ -58,6 +58,7 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="dpp.cot" Version="1.0.4" />
 		<PackageReference Include="EcoCore" Version="7.0.0.14875" />
+		<PackageReference Include="Esri.ArcGISRuntime.Maui" Version="200.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls.Maps" Version="7.0.92" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -93,6 +94,9 @@
 	  <Compile Update="ConfigTakServerListPage.xaml.cs">
 	    <DependentUpon>ConfigTakServerListPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="MainArcgisPage.xaml.cs">
+	    <DependentUpon>MainArcgisPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -106,6 +110,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="ConfigTakServerListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="MainArcgisPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

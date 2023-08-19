@@ -32,7 +32,7 @@ public partial class MainViewModel : ObservableObject, IRecipient<PreferencesUpd
 
     [ObservableProperty] private MapZoomPanBehavior mapZoomPanBehavior;
 
-    [ObservableProperty] private ObservableCollection<ATAKMapMarker> markers = new();
+    [ObservableProperty] private ObservableCollection<AtakMapMarker> markers = new();
 
     public MainViewModel(LocationService locationService, TakService takService,
         DataService dataService, IMessenger messenger)
@@ -70,6 +70,7 @@ public partial class MainViewModel : ObservableObject, IRecipient<PreferencesUpd
 
     private void OnTakContact(TakContact obj)
     {
+        
         var marker = markers.FirstOrDefault(a => a.UUID == obj.UUID);
         if (marker != null)
         {
@@ -85,7 +86,7 @@ public partial class MainViewModel : ObservableObject, IRecipient<PreferencesUpd
         }
         else
         {
-            markers.Add(new ATAKMapMarker
+            markers.Add(new AtakMapMarker
             {
                 UUID = obj.UUID,
                 CallSign = obj.Callsign,
@@ -113,7 +114,7 @@ public partial class MainViewModel : ObservableObject, IRecipient<PreferencesUpd
     [RelayCommand]
     private async Task UserConfig()
     {
-        await Shell.Current.GoToAsync(nameof(ConfigListingPage));
+        await Shell.Current.GoToAsync(nameof(MainArcgisPage));
     }
 
     [RelayCommand]
@@ -161,7 +162,7 @@ public partial class MainViewModel : ObservableObject, IRecipient<PreferencesUpd
         _timer.Elapsed += _timer_Elapsed;
         _timer.Start();
         _takService.LoadServer();    
-        _takService.Connect();
+        //_takService.Connect();
         _takService.UpdateContact(new TakContact()
         {
             Callsign = callsign,Role = settings.Role,Team = settings.Team,UUID = Guid.NewGuid().ToString()
@@ -178,7 +179,7 @@ public partial class MainViewModel : ObservableObject, IRecipient<PreferencesUpd
             var marker = Markers.SingleOrDefault(a => a.UUID == "self");
             if (marker == null)
             {
-                Markers.Add(new ATAKMapMarker 
+                Markers.Add(new AtakMapMarker 
                 {
                     UUID = "self",
                     CallSign = "self",
@@ -202,7 +203,7 @@ public partial class MainViewModel : ObservableObject, IRecipient<PreferencesUpd
     }
 }
 
-public class ATAKMapMarker : MapMarker
+public class AtakMapMarker : MapMarker,IAtakMarker
 {
     public string CallSign { get; set; }
     public string Role { get; set; }
@@ -210,4 +211,16 @@ public class ATAKMapMarker : MapMarker
     public string UUID { get; set; }
     public string SourceUid { get; set; }
     public TakContact TakContact { get; set; }
+}
+
+public interface IAtakMarker
+{
+    public string CallSign { get; set; }
+    public string Role { get; set; }
+    public string Color { get; set; }
+    public string UUID { get; set; }
+    public string SourceUid { get; set; }
+    public TakContact TakContact { get; set; }
+    double Latitude { get; set; }
+    double Longitude { get; set; }
 }

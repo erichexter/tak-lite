@@ -1,27 +1,28 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Esri.ArcGISRuntime.Maui;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Core.Hosting;
 using Tak_lite.Service;
 using Tak_lite.ViewModels;
 
-
 namespace Tak_lite;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-		builder
-			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-				fonts.AddFont(filename: "MaterialIcons-Regular.ttf", alias: "MaterialDesignIcons");
-			})
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialDesignIcons");
+            })
             .UseMauiMaps()
             .ConfigureSyncfusionCore()
+            .UseArcGISRuntime();
             ;
 
         builder.Services.AddTransient<ConfigTakServerDetailViewModel>();
@@ -39,12 +40,14 @@ public static class MauiProgram
         builder.Services.AddSingleton<DataService>();
         builder.Services.AddSingleton<IMessenger>(provider => WeakReferenceMessenger.Default);
         builder.Services.AddSingleton<TakService>();
+        builder.Services.AddSingleton<MainArcgisPage>();
+        builder.Services.AddSingleton<MainArcgisViewModel>();
 
-		
+
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
-		return builder.Build();
-	}
+        return builder.Build();
+    }
 }
