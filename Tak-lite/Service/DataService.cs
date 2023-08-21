@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections;
+using Newtonsoft.Json;
 using Tak_lite.ViewModels;
 
 namespace Tak_lite.Service;
@@ -43,4 +44,14 @@ public class AppSettings
     public string Role;
     public string Team;
     public List<TakServer> Servers { get; set; }=new List<TakServer>();
+    public List<KmlFile> Kml { get; set; } = new List<KmlFile>();
+}
+
+public class KmlFile
+{
+    public string Name { get; set; }
+    public string Description;
+    public string Filename { get; set; }
+    public bool Enabled { get; set; }
+    public string Id { get; set; }
 }

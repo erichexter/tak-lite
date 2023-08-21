@@ -11,5 +11,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(ConfigTakServerDetailPage), typeof(ConfigTakServerDetailPage));
         Routing.RegisterRoute(nameof(ConfigTakServerListPage), typeof(ConfigTakServerListPage));
         //Routing.RegisterRoute(nameof(MainArcgisPage),typeof(MainArcgisPage));
+        Routing.RegisterRoute(nameof(ConfigKmlListPage),typeof(ConfigKmlListPage));
     }
 }

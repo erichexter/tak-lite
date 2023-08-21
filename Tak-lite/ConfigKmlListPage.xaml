@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tak_lite.ConfigKmlListPage"
+             xmlns:viewModels="clr-namespace:Tak_lite.ViewModels"
+             xmlns:service="clr-namespace:Tak_lite.Service"
+             x:DataType="viewModels:ConfigKmlListViewModel">
+    <ContentPage.Content>
+        <VerticalStackLayout>
+            <ListView ItemsSource="{Binding Files}" Margin="20" ItemTapped="ListView_OnItemTapped" >
+                <ListView.ItemTemplate>
+                    <DataTemplate  >
+                        <SwitchCell Text="{Binding Name}" On="{Binding Enabled}" x:DataType="service:KmlFile" OnChanged="SwitchCell_OnOnChanged"  />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Margin="30" WidthRequest="150" Text="Add New" Command="{Binding CreateCommand}"></Button>
+        </VerticalStackLayout>
+        
+    </ContentPage.Content>
+</ContentPage>

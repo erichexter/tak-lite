@@ -88,6 +88,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="ConfigKmlListPage.xaml.cs">
+	    <DependentUpon>ConfigKmlListPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="ConfigPreferencesPage.xaml.cs">
 	    <DependentUpon>ConfigPreferencesPage.xaml</DependentUpon>
 	  </Compile>
@@ -100,6 +103,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="ConfigKmlListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="ConfigListingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -15,7 +15,7 @@ using Timer = System.Timers.Timer;
 
 namespace Tak_lite;
 
-public partial class MainArcgisViewModel : ObservableObject, IRecipient<PreferencesUpdatedMessage>,IRecipient<KmlAddedMessage>
+public partial class MainArcgisViewModel : ObservableObject, IRecipient<PreferencesUpdatedMessage>,IRecipient<KmlAddedMessage>,IRecipient<KmlVisableMessage>,IRecipient<KmlHiddenMessage>
 {
     private readonly DataService _dataService;
     private readonly LocationService _locationService;
@@ -50,7 +50,6 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         _messenger = messenger;
         _takService.Callback = OnTakContact;
         _takService.DisconnectCallback = OnTakContactDisconnect;
-        //akServiceInstance.Callback = OnTakContact;
         _messenger.Register<PreferencesUpdatedMessage>(this);
         _messenger.Register<KmlAddedMessage>(this);
     }
@@ -197,7 +196,7 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
             var pointGraphic = CreatePointMarker(loc,"dodgerblue");
             selfLocationOverlay.Graphics.Clear();
             selfLocationOverlay.Graphics.Add(pointGraphic);
-            CurrentLocation = $"Location: {location.Latitude} {location.Longitude} ";
+            CurrentLocation = "Location: "+ location.Latitude.ToString("00.00000") + " " + location.Longitude.ToString("00.00000");
         });
     }
 
@@ -210,7 +209,6 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
             Style = SimpleMarkerSymbolStyle.Circle,
             Color = System.Drawing.Color.FromName(color),
             Size = 14,
-             
         };
 
         selfSymbol.Outline = new SimpleLineSymbol
@@ -228,8 +226,23 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         var kml = new KmlLayer(new Uri(message.Value));
 
         MapView.Map.OperationalLayers.Add(kml);
+    }
 
-        
+    public void Receive(KmlVisableMessage message)
+    {
+        foreach (var layer in MapView.Map.OperationalLayers.Where(a=>a.Name != null && a is KmlLayer && a.Name.Equals(message)))
+        {
+            layer.IsVisible = true;
+        }
+    }
+
+    public void Receive(KmlHiddenMessage message)
+    {
+        foreach (var layer in MapView.Map.OperationalLayers.Where(a=>a.Name != null && a is KmlLayer && a.Name.Equals(message)))
+        {
+            layer.IsVisible = false;
+        }
+
     }
 }
 

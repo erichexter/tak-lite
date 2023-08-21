@@ -42,6 +42,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<TakService>();
         builder.Services.AddSingleton<MainArcgisPage>();
         builder.Services.AddSingleton<MainArcgisViewModel>();
+        builder.Services.AddSingleton<ConfigKmlListPage>();
+        builder.Services.AddSingleton<ConfigKmlListViewModel>();
 
 
 #if DEBUG
