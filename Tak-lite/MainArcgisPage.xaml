@@ -55,6 +55,45 @@
                         Color="Aqua" 
                         Size="30"/></ImageButton.Source>
             </ImageButton>
+            <ImageButton
+                x:Name="LayersBtn"
+                BackgroundColor=" #00FFFFFF"
+                IsOpaque="False"
+                Margin="25"
+                ZIndex="4"
+                HeightRequest="60"
+                WidthRequest="70"
+                Padding="0"
+                BorderWidth="0"
+                Opacity="1"
+                Command="{Binding OverlayCommand}" >
+                <ImageButton.Source>
+                    <FontImageSource
+                        FontFamily="MaterialDesignIcons"
+                        Glyph="{x:Static helper:IconFont.Layers}"
+                        Color="Aqua" 
+                        Size="30"/></ImageButton.Source>
+            </ImageButton>
+            <ImageButton
+                x:Name="KmlBtn"
+                BackgroundColor=" #00FFFFFF"
+                IsOpaque="False"
+                Margin="25"
+                ZIndex="4"
+                HeightRequest="60"
+                WidthRequest="70"
+                Padding="0"
+                BorderWidth="0"
+                Opacity="1"
+                Command="{Binding LayersCommand}" >
+                <ImageButton.Source>
+                    <FontImageSource
+                        FontFamily="MaterialDesignIcons"
+                        Glyph="{x:Static helper:IconFont.Map}"
+                        Color="Aqua" 
+                        Size="30"/></ImageButton.Source>
+            </ImageButton>
+
         </StackLayout>
         <StackLayout Grid.Column="1" VerticalOptions="End">
             <Border Margin="10" Opacity=".7" VerticalOptions="End" BackgroundColor="Black" WidthRequest="200"

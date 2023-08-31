@@ -15,7 +15,7 @@ using Timer = System.Timers.Timer;
 
 namespace Tak_lite;
 
-public partial class MainArcgisViewModel : ObservableObject, IRecipient<PreferencesUpdatedMessage>,IRecipient<KmlAddedMessage>,IRecipient<KmlVisableMessage>,IRecipient<KmlHiddenMessage>
+public partial class MainArcgisViewModel : ObservableObject, IRecipient<PreferencesUpdatedMessage>,IRecipient<KmlAddedMessage>,IRecipient<KmlVisibleMessage>,IRecipient<KmlHiddenMessage>
 {
     private readonly DataService _dataService;
     private readonly LocationService _locationService;
@@ -26,13 +26,7 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
     [ObservableProperty] private string callsign;
     [ObservableProperty] private MapLatLng center;
 
-    private ObservableCollection<MapSublayer> Layers = new();
-
-
-    //[ObservableProperty]
     private Location location;
-    //[ObservableProperty]
-    //bool isConnected ;
 
     [ObservableProperty] private string mapTilesUrl;
 
@@ -45,13 +39,14 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
     {
         _locationService = locationService;
         _takService = takService;
-        
         _dataService = dataService;
         _messenger = messenger;
         _takService.Callback = OnTakContact;
         _takService.DisconnectCallback = OnTakContactDisconnect;
         _messenger.Register<PreferencesUpdatedMessage>(this);
         _messenger.Register<KmlAddedMessage>(this);
+        _messenger.Register<KmlHiddenMessage>(this);
+        _messenger.Register<KmlVisibleMessage>(this);
     }
 
     private void OnTakContactDisconnect(string uid)
@@ -59,10 +54,7 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         var marker = (AtakMarkerGraphic)cotMarkersOverlay.Graphics.Cast<IAtakMarker>().FirstOrDefault(a => a.UUID == uid);
         if (marker != null)
         {
-            //marker.IconStroke = new SolidColorBrush(Color.Parse("gray"));
-            //marker.IconFill = new SolidColorBrush(Color.Parse("gray"));
             ((SimpleMarkerSymbol)marker.Symbol).Color = System.Drawing.Color.Gray;
-
         }
 
     }
@@ -100,7 +92,6 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
             marker1.Role = obj.Role;
             marker1.SourceUid = obj.SourecUid;
             marker1.TakContact = obj;
-            
             cotMarkersOverlay.Graphics.Add(marker1);
         }
     }
@@ -124,6 +115,12 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         MapView.SetViewpoint(new Viewpoint(new MapPoint( location.Longitude, location.Latitude,SpatialReferences.Wgs84), 1000));
     }
 
+    [RelayCommand]
+    private async void Overlay()
+    {
+        await Shell.Current.GoToAsync(nameof(ConfigKmlListPage));
+    }
+
 
     private async void _timer_Elapsed(object sender, ElapsedEventArgs e)
     {
@@ -145,7 +142,6 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         {
             markers.Remove(marker);
         }
-
     }
 
     public void Load()
@@ -153,20 +149,21 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         var settings = _dataService.GetAppSettings();
         Callsign = settings.Callsign;
 
-             selfLocationOverlay = new GraphicsOverlay();
-             cotMarkersOverlay=new GraphicsOverlay();
+         selfLocationOverlay = new GraphicsOverlay();
+         cotMarkersOverlay=new GraphicsOverlay();
 
-            // Add the overlay to a graphics overlay collection.
-            GraphicsOverlayCollection overlays = new GraphicsOverlayCollection
-            {
-                selfLocationOverlay,cotMarkersOverlay
-            };
+        GraphicsOverlayCollection overlays = new GraphicsOverlayCollection
+        {
+            selfLocationOverlay,cotMarkersOverlay
+        };
 
-            // Set the view model's "GraphicsOverlays" property (will be consumed by the map view).
-            MapView.GraphicsOverlays = overlays;
-            //var kml = new KmlLayer("");
+        MapView.GraphicsOverlays = overlays;
 
-            //MapView.Map.OperationalLayers.Add(kml);
+        settings.Kml.ForEach(k=>MapView.Map.OperationalLayers.Add(new KmlLayer(new Uri(k.Filename))
+        {
+            IsVisible = k.Enabled
+
+        }));
 
         UpdateLocation();
         _timer = new Timer();
@@ -226,19 +223,22 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         var kml = new KmlLayer(new Uri(message.Value));
 
         MapView.Map.OperationalLayers.Add(kml);
+
     }
 
-    public void Receive(KmlVisableMessage message)
+    public void Receive(KmlVisibleMessage message)
     {
-        foreach (var layer in MapView.Map.OperationalLayers.Where(a=>a.Name != null && a is KmlLayer && a.Name.Equals(message)))
+        foreach (var layer in MapView.Map.OperationalLayers.Where(a=>a.Name != null && a is KmlLayer && a.Name.Equals(message.Value)))
         {
             layer.IsVisible = true;
+            //layer.FullExtent?.GetCenter()
+            
         }
     }
 
     public void Receive(KmlHiddenMessage message)
     {
-        foreach (var layer in MapView.Map.OperationalLayers.Where(a=>a.Name != null && a is KmlLayer && a.Name.Equals(message)))
+        foreach (var layer in MapView.Map.OperationalLayers.Where(a=>a.Name != null && a is KmlLayer && a.Name.Equals(message.Value)))
         {
             layer.IsVisible = false;
         }

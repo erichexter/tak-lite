@@ -49,7 +49,9 @@ public partial class ConfigKmlListViewModel : ObservableObject
             var settings = _dataService.GetAppSettings();
             settings.Kml.Add(kmlfile);
             _dataService.Save(settings);
+            Files.Add(kmlfile);
             _messenger.Send(new KmlAddedMessage(file.FullPath));
+            
         });
     }
     public async Task Edit(string id)
@@ -57,14 +59,18 @@ public partial class ConfigKmlListViewModel : ObservableObject
         //throw new NotImplementedException();
     }
 
-    public async Task Toggled(string source, bool visable)
+    public async Task Toggled(string source, bool visible)
     {
         var settings= _dataService.GetAppSettings();
         settings.Kml = Files.ToList();
-        _dataService.Save(settings);
-        if (visable)
+        foreach (var kmlFile in settings.Kml.Where(a=>a.Name.Equals(source)))
         {
-            _messenger.Send(new KmlVisableMessage(source));
+            kmlFile.Enabled=visible;
+        }
+        _dataService.Save(settings);
+        if (visible)
+        {
+            _messenger.Send(new KmlVisibleMessage(source));
         }
         else
         {
@@ -74,9 +80,9 @@ public partial class ConfigKmlListViewModel : ObservableObject
     }
 }
 
-public class KmlVisableMessage : ValueChangedMessage<string>
+public class KmlVisibleMessage : ValueChangedMessage<string>
 {
-    public KmlVisableMessage(string value) : base(value)
+    public KmlVisibleMessage(string value) : base(value)
     {
     }
 }
