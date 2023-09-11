@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tak_lite.ConfigAresPage"
+             xmlns:viewModels="clr-namespace:Tak_lite.ViewModels"
+             x:DataType="viewModels:ConfigAresDetailViewModel"
+             Title="Ares Alpha">
+    <VerticalStackLayout Padding="10" Margin="10">
+        <VerticalStackLayout IsVisible="{Binding ShowLogin}">
+            <Label Text="Username"></Label>
+            <Entry  Text="{Binding Username}"></Entry>
+            <Label Text="Password"></Label>
+            <Entry Text="{Binding Password}"></Entry>
+            <Button  Margin="10"  Text="Save"  Command="{Binding SaveCommand}"></Button>
+        </VerticalStackLayout>
+        <VerticalStackLayout  IsVisible="{Binding ShowGameJoin}">
+            <Label Text="Username"></Label>
+            <Label  Text="{Binding Username}"></Label>
+            <Button  Margin="10"  Text="Logout"  Command="{Binding LogoutCommand}"></Button>
+            <Label Text="Game"></Label>
+            <Entry Text="asdf"></Entry>
+            <Label Text="Sponsor"></Label>
+            <Entry Text="asdfads"></Entry>
+            <Label Text="Level"></Label>
+            <Entry Text="asdfasd"></Entry>
+            <Label Text="Group Name"></Label>
+            <Entry Text="asdfasdf"></Entry>
+            <Button  Margin="10"  Text="Join"  Command="{Binding JoinGameCommand}"></Button>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

@@ -55,6 +55,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="dpp.cot" Version="1.0.4" />
 		<PackageReference Include="EcoCore" Version="7.0.0.14875" />
@@ -100,6 +101,9 @@
 	  <Compile Update="MainArcgisPage.xaml.cs">
 	    <DependentUpon>MainArcgisPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="ConfigAresPage.xaml.cs">
+	    <DependentUpon>ConfigAresPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -119,6 +123,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="MainArcgisPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ConfigAresPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

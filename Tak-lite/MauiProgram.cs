@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Mvvm.Messaging;
 using Esri.ArcGISRuntime.Maui;
 using Microsoft.Extensions.Logging;
-using Syncfusion.Maui.Core.Hosting;
 using Tak_lite.Service;
 using Tak_lite.ViewModels;
 
@@ -21,9 +21,10 @@ public static class MauiProgram
                 fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialDesignIcons");
             })
             .UseMauiMaps()
-            .ConfigureSyncfusionCore()
+            //.ConfigureSyncfusionCore()
+            .UseMauiCommunityToolkit()
             .UseArcGISRuntime();
-            ;
+        ;
 
         builder.Services.AddTransient<ConfigTakServerDetailViewModel>();
         builder.Services.AddTransient<ConfigTakServerDetailPage>();
@@ -44,6 +45,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<MainArcgisViewModel>();
         builder.Services.AddSingleton<ConfigKmlListPage>();
         builder.Services.AddSingleton<ConfigKmlListViewModel>();
+        builder.Services.AddTransient<ConfigAresPage>();
+        builder.Services.AddTransient<ConfigAresDetailViewModel>();
+        builder.Services.AddSingleton<AresAlphaService>();
 
 
 #if DEBUG

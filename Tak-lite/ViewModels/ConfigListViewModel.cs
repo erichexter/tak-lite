@@ -22,6 +22,11 @@ public partial class ConfigListViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public async Task Ares()
+    {
+        await Shell.Current.GoToAsync(nameof(ConfigAresPage));
+    }
+    [RelayCommand]
     public async Task Servers()
     {
         await Shell.Current.GoToAsync(nameof(ConfigTakServerListPage));
@@ -31,19 +36,6 @@ public partial class ConfigListViewModel : ObservableObject
     public async Task Kml()
     {
         await Shell.Current.GoToAsync(nameof(ConfigKmlListPage));
-        //Device.BeginInvokeOnMainThread(async () =>
-        //{
-        //    var file = await FilePicker.Default.PickAsync(new PickOptions
-        //    {
-        //        FileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-        //        {
-        //            { DevicePlatform.Android, new[] { "application/zip" } },
-        //            { DevicePlatform.WinUI, new[] { "*.kml","*.kmz","*.zip" } },
-        //            { DevicePlatform.iOS, new[] { "public.archive" } }
-        //        })
-        //    });
-        //    _messenger.Send(new KmlAddedMessage(file.FullPath));
-        //});
     }
         
 }

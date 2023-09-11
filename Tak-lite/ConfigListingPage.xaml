@@ -9,6 +9,7 @@
     <VerticalStackLayout>
        <Button BackgroundColor="White" TextColor="Black" Text="Preferences" Command="{Binding PreferencesCommand}" ></Button>
        <Button BackgroundColor="White" TextColor="Black" Text="Servers" Command="{Binding ServersCommand}" ></Button>
+        <Button BackgroundColor="White" TextColor="Black" Text="Ares Alpha" Command="{Binding AresCommand}" ></Button>
         <Button BackgroundColor="White" TextColor="Black" Text="Kml/Kmz overlays" Command="{Binding KmlCommand}" ></Button>
     </VerticalStackLayout>
 </ContentPage>
