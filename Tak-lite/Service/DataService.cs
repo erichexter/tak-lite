@@ -46,6 +46,7 @@ public class AppSettings
     public List<TakServer> Servers { get; set; }=new List<TakServer>();
     public List<KmlFile> Kml { get; set; } = new List<KmlFile>();
     public LoginUser AresUser { get; set; }
+    public Game AresGame { get; set; }
 }
 
 public class KmlFile

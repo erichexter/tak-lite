@@ -18,14 +18,22 @@
             <Label  Text="{Binding Username}"></Label>
             <Button  Margin="10"  Text="Logout"  Command="{Binding LogoutCommand}"></Button>
             <Label Text="Game"></Label>
-            <Entry Text="asdf"></Entry>
+            <Entry Text="{Binding GameId}"></Entry>
             <Label Text="Sponsor"></Label>
-            <Entry Text="asdfads"></Entry>
+            <Entry Text="{Binding SponsorId}"></Entry>
             <Label Text="Level"></Label>
-            <Entry Text="asdfasd"></Entry>
+            <Entry Text="{Binding Level}"></Entry>
             <Label Text="Group Name"></Label>
-            <Entry Text="asdfasdf"></Entry>
+            <Entry Text="{Binding GroupName}"></Entry>
             <Button  Margin="10"  Text="Join"  Command="{Binding JoinGameCommand}"></Button>
+        </VerticalStackLayout>
+        <VerticalStackLayout  IsVisible="{Binding ShowGame}">
+            <Label Text="Username"></Label>
+            <Label  Text="{Binding Username}"></Label>
+            <Button  Margin="10"  Text="Logout"  Command="{Binding LogoutCommand}"></Button>
+            <Label Text="Game"></Label>
+            <Label Text="{Binding GameName}"></Label>
+            <Button  Margin="10"  Text="Leave Game"  Command="{Binding JoinGameCommand}"></Button>
         </VerticalStackLayout>
     </VerticalStackLayout>
 </ContentPage>

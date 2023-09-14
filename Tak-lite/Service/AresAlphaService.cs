@@ -10,6 +10,10 @@ public class AresAlphaService
     private string token;
     public bool LoggedIn { get; set; } = false;
 
+    public void SetToken(string token)
+    {
+        this.token = token;
+    }
     public async Task<LoginResult> Login(string username, string password)
     {
         var apiBaseUrl = "https://api.ares-alpha.com/api/v1/";
@@ -82,10 +86,10 @@ public class AresAlphaService
             var gameRequestJson = JsonConvert.SerializeObject(gameRequest);
             var body = new StringContent(gameRequestJson, Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(apiUrl, body);
-
+            var responseContent = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
+                
 
                 var gameres = JsonSerializer.Deserialize<JoinGameResult>(responseContent);
 
