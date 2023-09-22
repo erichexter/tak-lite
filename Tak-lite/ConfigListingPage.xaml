@@ -2,12 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Tak_lite.ConfigListingPage"
-             Title="ConfigListingPage"
+             Title="Settings"
              xmlns:viewmodel="clr-namespace:Tak_lite.ViewModels"
              x:DataType="viewmodel:ConfigListViewModel">
              
     <VerticalStackLayout>
-       <Button BackgroundColor="White" TextColor="Black" Text="Preferences" Command="{Binding PreferencesCommand}" ></Button>
+       <Button BackgroundColor="White" TextColor="Black" Text="User" Command="{Binding PreferencesCommand}" ></Button>
        <Button BackgroundColor="White" TextColor="Black" Text="Servers" Command="{Binding ServersCommand}" ></Button>
         <Button BackgroundColor="White" TextColor="Black" Text="Ares Alpha" Command="{Binding AresCommand}" ></Button>
         <Button BackgroundColor="White" TextColor="Black" Text="Kml/Kmz overlays" Command="{Binding KmlCommand}" ></Button>

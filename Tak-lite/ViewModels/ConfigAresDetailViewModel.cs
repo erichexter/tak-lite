@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Tak_lite.Service;
+using ZXing;
 
 namespace Tak_lite.ViewModels;
 
@@ -20,12 +21,17 @@ public partial class ConfigAresDetailViewModel :ObservableObject
 
     public void Load()
     {
+        ShowGame = false;
+        ShowGameJoin = false;
+        ShowLogin = true;
+
         var appSettings = _dataService.GetAppSettings();
         _ares = appSettings.AresUser;
         _game = appSettings.AresGame;
-        if (_ares != null)
+        if (_ares != null && !string.IsNullOrEmpty(_ares.token))
         {
             ShowLogin = string.IsNullOrEmpty(_ares.token);
+
             Username = _ares.username;
             _aresAlphaService.SetToken(_ares.token);
 
@@ -39,9 +45,6 @@ public partial class ConfigAresDetailViewModel :ObservableObject
             {
                 ShowGameJoin = !showLogin;    
             }
-
-            
-
         }
     }
 
@@ -63,6 +66,9 @@ public partial class ConfigAresDetailViewModel :ObservableObject
         var appsettings = _dataService.GetAppSettings();
         appsettings.AresUser = result.value;
         _dataService.Save(appsettings);
+        ShowLogin = false;
+        ShowGameJoin = true;
+        ShowGame = false;
     }
 
     [RelayCommand]
@@ -73,6 +79,9 @@ public partial class ConfigAresDetailViewModel :ObservableObject
         var appsettings = _dataService.GetAppSettings();
         appsettings.AresUser.token = "";
         _dataService.Save(appsettings);
+        ShowGame = false;
+        ShowGameJoin = false;
+        ShowLogin = true;
     }
 
     [RelayCommand]
@@ -95,11 +104,52 @@ public partial class ConfigAresDetailViewModel :ObservableObject
         }
     }
 
+    [RelayCommand]
+    public async Task LeaveGame()
+    {
+
+        SponsorId="";
+        GameId="";
+        var appsettings = _dataService.GetAppSettings();
+        appsettings.AresGame = null;
+        ShowGame = false;
+        ShowGameJoin = true;
+        _dataService.Save(appsettings);
+    }
+
     [ObservableProperty] public string gameId;
     [ObservableProperty] public string sponsorId;
     [ObservableProperty] public string level;
     [ObservableProperty] public string groupName;
     [ObservableProperty] public string gameName;
     [ObservableProperty] public bool showGame;
+    [ObservableProperty] public Result[] barcode;
+    [ObservableProperty] public bool showScanner=false;
     private Game _game;
+
+    partial void OnBarcodeChanged(Result[] value)
+    {
+        ShowScanner = false;
+        var qrcode = value[0]?.Text;
+        if(!string.IsNullOrEmpty(qrcode))
+        {
+            if (qrcode.StartsWith("ARES/"))
+            {
+                var segments = qrcode.Split(new char[] { '/' });
+                var action = segments[1];
+                var level=segments[2];
+                var sponsor=segments[3];
+                var game = segments[4];
+                GameId = game;
+                SponsorId = sponsor;
+                JoinGame();
+            }
+        }
+    }
+
+    [RelayCommand]
+    public void Scan()
+    {
+        ShowScanner = true;
+    }
 }

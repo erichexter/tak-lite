@@ -32,6 +32,26 @@
         </map:SfMaps>
         <StackLayout Grid.Column="1" Margin="0" Padding="0" VerticalOptions="Center" HorizontalOptions="End">
             <ImageButton
+                BackgroundColor=" #00FFFFFF"
+                IsOpaque="False"
+                Margin="25"
+                ZIndex="4"
+                HeightRequest="60"
+                WidthRequest="50"
+                Padding="0"
+                BorderWidth="0"
+                Opacity="1"
+                Command="{Binding CenterMapCommand}">
+                <ImageButton.Source  >
+                    <FontImageSource
+                        FontFamily="MaterialDesignIcons"
+                        Glyph="{x:Static helper:IconFont.Groups}"
+                        Color="Aqua" 
+                        Size="40"
+                    />
+                </ImageButton.Source>
+            </ImageButton>
+            <ImageButton
                 x:Name="CenterBtn"
                 BackgroundColor=" #00FFFFFF"
                 IsOpaque="False"

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿using Camera.MAUI;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Mvvm.Messaging;
 using Esri.ArcGISRuntime.Maui;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,8 @@ public static class MauiProgram
             .UseMauiMaps()
             //.ConfigureSyncfusionCore()
             .UseMauiCommunityToolkit()
-            .UseArcGISRuntime();
+            .UseArcGISRuntime()
+            .UseMauiCameraView();
         ;
 
         builder.Services.AddTransient<ConfigTakServerDetailViewModel>();

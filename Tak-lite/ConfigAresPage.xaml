@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Tak_lite.ConfigAresPage"
              xmlns:viewModels="clr-namespace:Tak_lite.ViewModels"
+             xmlns:maui="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
              x:DataType="viewModels:ConfigAresDetailViewModel"
              Title="Ares Alpha">
     <VerticalStackLayout Padding="10" Margin="10">
@@ -26,6 +27,8 @@
             <Label Text="Group Name"></Label>
             <Entry Text="{Binding GroupName}"></Entry>
             <Button  Margin="10"  Text="Join"  Command="{Binding JoinGameCommand}"></Button>
+            <Button  Margin="10"  Text="Scan"  Command="{Binding ScanCommand}"></Button>
+            <maui:CameraView CamerasLoaded="CameraView_OnCamerasLoaded" IsVisible="{Binding ShowScanner}" AutoStartPreview="{Binding ShowScanner}" WidthRequest="300" HeightRequest="300"   x:Name="cameraView" BarCodeDetectionEnabled="True"  BarCodeResults="{Binding Barcode,Mode=OneWayToSource}"></maui:CameraView>
         </VerticalStackLayout>
         <VerticalStackLayout  IsVisible="{Binding ShowGame}">
             <Label Text="Username"></Label>
@@ -33,7 +36,7 @@
             <Button  Margin="10"  Text="Logout"  Command="{Binding LogoutCommand}"></Button>
             <Label Text="Game"></Label>
             <Label Text="{Binding GameName}"></Label>
-            <Button  Margin="10"  Text="Leave Game"  Command="{Binding JoinGameCommand}"></Button>
+            <Button  Margin="10"  Text="Leave Game"  Command="{Binding LeaveGameCommand}"></Button>
         </VerticalStackLayout>
     </VerticalStackLayout>
 </ContentPage>

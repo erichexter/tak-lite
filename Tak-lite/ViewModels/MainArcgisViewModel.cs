@@ -3,15 +3,22 @@ using System.Timers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using dpp.cot;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Mapping;
 using Esri.ArcGISRuntime.Maui;
 using Esri.ArcGISRuntime.Symbology;
 using Esri.ArcGISRuntime.UI;
+
 using Syncfusion.Maui.Maps;
 using Tak_lite.Service;
 using Tak_lite.ViewModels;
+using Color = System.Drawing.Color;
+using FontWeight = Esri.ArcGISRuntime.Symbology.FontWeight;
+using HorizontalAlignment = Esri.ArcGISRuntime.Symbology.HorizontalAlignment;
+using Point = dpp.cot.Point;
 using Timer = System.Timers.Timer;
+using VerticalAlignment = Esri.ArcGISRuntime.Symbology.VerticalAlignment;
 
 namespace Tak_lite;
 
@@ -20,6 +27,7 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
     private readonly DataService _dataService;
     private readonly LocationService _locationService;
     private readonly IMessenger _messenger;
+    private readonly AresAlphaService _alphaService;
     private readonly TakService _takService;
     private Timer _timer;
 
@@ -35,12 +43,13 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
     [ObservableProperty] private ObservableCollection<AtakMapMarker> markers = new();
 
     public MainArcgisViewModel(LocationService locationService, TakService takService,
-        DataService dataService, IMessenger messenger)
+        DataService dataService, IMessenger messenger,AresAlphaService alphaService)
     {
         _locationService = locationService;
         _takService = takService;
         _dataService = dataService;
         _messenger = messenger;
+        _alphaService = alphaService;
         _takService.Callback = OnTakContact;
         _takService.DisconnectCallback = OnTakContactDisconnect;
         _messenger.Register<PreferencesUpdatedMessage>(this);
@@ -84,7 +93,7 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         }
         else
         {
-            var marker1 = CreatePointMarker(new Location( obj.Point.Lat,obj.Point.Lon), obj.Team);
+            var marker1 = CreatePointMarker(new Location( obj.Point.Lat,obj.Point.Lon), obj.Team,obj.Callsign);
             marker1.UUID = obj.UUID;
             marker1.CallSign = obj.Callsign;
             marker1.SetLocation(obj.Point.Lon,obj.Point.Lat);
@@ -130,6 +139,28 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         {
             SetLocation(location);
             if (_takService.IsConnected()) _takService.UpdateLocation(location);
+            if (_alphaService.LoggedIn) await _alphaService.SendLocation(location.Latitude, location.Longitude);
+        }
+        var info = await _alphaService.UpdateAllInfo();
+        if (info != null)
+        {
+            foreach (var track in info?.value?.tracks)
+            {
+                var data = track.ToString().Split(",");
+                var id = data[0];
+                var lat = double.Parse(data[2]);
+                var lng = double.Parse(data[3]);
+                var callsign = data[5];
+                //"8b281cc5-9f36-4067-bd87-848f1186dbf4,0,30.47136,-97.85051,1,Hotel to - Hex,e3f91780-6dae-4274-bf8a-9a3eee24802e,new squad,,,,,1dc29538-d17b-4dc0-95c1-5d74786b9d47,Red team,,C,"
+                OnTakContact(new TakContact()
+                    {
+                        UUID = id, Callsign = callsign, LastChanged = DateTime.UtcNow,
+                        Stale = DateTime.UtcNow.AddMinutes(15), Role = "Team Member", Point = new
+                            Point() { Lat = lat, Lon = lng },
+                        Team = "Cyan"
+                    }
+                );
+            }
         }
 
         RemoveExpiredMarkers();
@@ -177,7 +208,16 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
         {
             Callsign = callsign,Role = settings.Role,Team = settings.Team,UUID = Guid.NewGuid().ToString()
         });
-        
+
+        if (settings.AresUser.token != null)
+        {
+            _alphaService.SetToken(settings.AresUser.token);
+            if (settings.AresGame != null)
+            {
+                _alphaService.SetGameInfo(settings.AresGame.gameId,settings.AresUser.id);
+            }
+        }
+
     }
 
     [ObservableProperty] private string currentLocation;
@@ -187,34 +227,46 @@ public partial class MainArcgisViewModel : ObservableObject, IRecipient<Preferen
     public void SetLocation(Location loc)
     {
         location = loc;
-        Device.BeginInvokeOnMainThread(async () =>
+        Device.BeginInvokeOnMainThread( () =>
         {
 
-            var pointGraphic = CreatePointMarker(loc,"dodgerblue");
+            var pointGraphic = CreatePointMarker(loc,"dodgerblue",Callsign);
             selfLocationOverlay.Graphics.Clear();
             selfLocationOverlay.Graphics.Add(pointGraphic);
-            CurrentLocation = "Location: "+ location.Latitude.ToString("00.00000") + " " + location.Longitude.ToString("00.00000");
+            CurrentLocation = "Location: " + location.Latitude.ToString("00.00000") + " " + location.Longitude.ToString("00.00000");
         });
     }
 
-    private static AtakMarkerGraphic CreatePointMarker(Location loc,string color)
+    private static AtakMarkerGraphic CreatePointMarker(Location loc,string color,string label)
     {
         var selfPoint = new MapPoint(loc.Longitude, loc.Latitude, SpatialReferences.Wgs84);
          //new TextSymbol()
+
+         var labelsymbol = new TextSymbol(label,Color.White, 14,HorizontalAlignment.Center,VerticalAlignment.Bottom);
+         //labelsymbol.OutlineColor=Color.Black;
+         //labelsymbol.OutlineWidth = .5;
+         labelsymbol.FontWeight = FontWeight.Normal;
+         labelsymbol.OffsetY = 15;
+         labelsymbol.BackgroundColor=Color.Gray;
+        
+         //labelsymbol.LeaderOffsetY = -200;
         var selfSymbol = new SimpleMarkerSymbol
         {
             Style = SimpleMarkerSymbolStyle.Circle,
             Color = System.Drawing.Color.FromName(color),
             Size = 14,
+            
         };
-
+        
         selfSymbol.Outline = new SimpleLineSymbol
         {
             Style = SimpleLineSymbolStyle.Solid,
             Color = System.Drawing.Color.White,
             Width = 2.0
         };
-        var pointGraphic = new AtakMarkerGraphic(selfPoint, selfSymbol);
+        var comp = new CompositeSymbol(new MarkerSymbol[] { labelsymbol, selfSymbol });
+
+        var pointGraphic = new AtakMarkerGraphic(selfPoint, comp);
         return pointGraphic;
     }
 

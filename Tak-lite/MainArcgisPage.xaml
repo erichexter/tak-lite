@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ContentPage
-    Title="foo"
+    Title="Team Track - Situational Awareness"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maui="http://schemas.esri.com/arcgis/runtime/2013"
@@ -16,6 +16,26 @@
         </Grid.ColumnDefinitions>
             <maui:MapView x:Name="mapview"   Grid.ColumnSpan="2" VerticalOptions="Fill" ></maui:MapView>
         <StackLayout Grid.Column="1" Margin="0" Padding="0" VerticalOptions="Center" HorizontalOptions="End">
+            <ImageButton
+                BackgroundColor=" #00FFFFFF"
+                IsOpaque="False"
+                Margin="25"
+                ZIndex="4"
+                HeightRequest="60"
+                WidthRequest="50"
+                Padding="0"
+                BorderWidth="0"
+                Opacity="1"
+                Command="{Binding CenterMapCommand}">
+                <ImageButton.Source  >
+                    <FontImageSource
+                        FontFamily="MaterialDesignIcons"
+                        Glyph="{x:Static helper:IconFont.Groups}"
+                        Color="Aqua" 
+                        Size="40"
+                    />
+                </ImageButton.Source>
+            </ImageButton>
             <ImageButton
                 x:Name="CenterBtn"
                 BackgroundColor=" #00FFFFFF"
