@@ -40,7 +40,9 @@
             </Picker.ItemsSource>
         </Picker>
         <Label Text="Hierarchy"></Label>
-        <Picker  SelectedItem="{Binding GameTeam}" ItemsSource="{Binding Hiearchy}" >
+        <Picker  
+            ItemsSource="{Binding Hiearchy}"
+            SelectedItem="{Binding GameTeam}"  >
         </Picker>
         <Button Text="Save" Command="{Binding SaveCommand}"></Button>
     </VerticalStackLayout>

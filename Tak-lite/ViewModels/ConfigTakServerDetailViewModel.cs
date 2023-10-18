@@ -66,7 +66,7 @@ public partial class ConfigTakServerDetailViewModel : ObservableObject
         });
     }
 
-    private (string host, int port, string description) GetHost(Preferences manifest)
+    public static (string host, int port, string description) GetHost(Preferences manifest)
     {
         var CoTStreamsKey = "cot_streams";
         var ConnectionStringKey = "connectString0";
@@ -86,7 +86,7 @@ public partial class ConfigTakServerDetailViewModel : ObservableObject
         return (host, port, description);
     }
 
-    private Preferences GetZipfilePreferences(string packagePath)
+    public static Preferences GetZipfilePreferences(string packagePath)
     {
         using var package = new ZipArchive(new FileStream(packagePath!, FileMode.Open));
         var prefEntry = package.Entries.First(e => e.Name.EndsWith(".pref"));

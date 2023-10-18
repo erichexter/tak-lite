@@ -24,6 +24,7 @@ public partial class ConfigPreferencesViewModel : ObservableObject
         Role = appSettings.Role;
         Callsign = appSettings.Callsign;
         Team= appSettings.Team;
+        
         Hiearchy.Add("Alpha 1");
         Hiearchy.Add("Alpha 2");
         Hiearchy.Add("Alpha 3");
@@ -48,7 +49,7 @@ public partial class ConfigPreferencesViewModel : ObservableObject
         Hiearchy.Add("Hotel");
         Hiearchy.Add("Command");
 
-
+        GameTeam = appSettings.Hiearchy;
     }
 
 
@@ -70,12 +71,12 @@ public partial class ConfigPreferencesViewModel : ObservableObject
         appSettings.Callsign = Callsign;
         appSettings.Team = Team;
         appSettings.Role = Role;
+        appSettings.Hiearchy = GameTeam;
         _dataService.Save(appSettings);
         _messenger.Send(new PreferencesUpdatedMessage(DateTime.UtcNow));
         //refresh the main screen
         await Shell.Current.GoToAsync("..");
     }
-
 }
 
 public class PreferencesUpdatedMessage : ValueChangedMessage<DateTime>

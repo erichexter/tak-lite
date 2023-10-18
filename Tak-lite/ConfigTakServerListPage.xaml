@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Tak_lite.ConfigTakServerListPage"
              xmlns:viewModels="clr-namespace:Tak_lite.ViewModels"
-             
-             >
+             xmlns:maui="clr-namespace:Camera.MAUI;assembly=Camera.MAUI">
     <VerticalStackLayout>
         <ListView ItemsSource="{Binding Servers}" Margin="20" ItemTapped="ListView_OnItemTapped">
             <ListView.ItemTemplate>
@@ -18,5 +17,7 @@
             </ListView.ItemTemplate>
         </ListView>
         <Button Margin="30" WidthRequest="150" Text="Add New" Command="{Binding CreateCommand}"></Button>
+        <Button Margin="30" WidthRequest="150" Text="Scan" Command="{Binding ScanCommand}"></Button>
+        <maui:CameraView CamerasLoaded="CameraView_OnCamerasLoaded" IsVisible="{Binding ShowScanner}" AutoStartPreview="{Binding ShowScanner}" WidthRequest="300" HeightRequest="300"   x:Name="cameraView" BarCodeDetectionEnabled="True"  BarCodeResults="{Binding Barcode,Mode=OneWayToSource}"></maui:CameraView>
     </VerticalStackLayout>
 </ContentPage>
