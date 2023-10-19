@@ -1,6 +1,6 @@
 # tak-lite
 
-This is an experiment in .Net Maui to create a cross platform TAK (Team Awareness Kit) client application.  A large part of this has been reverse engineering the TAK message protocols.
+This is an experiment in .Net Maui to create a cross platform (ios,android,windows,mac,linux) TAK (Team Awareness Kit) client application.  A large part of this has been reverse engineering the TAK message protocols.
 
 The main objective is to provide consistent GIS Mapping features cross platform, the existing Department of Defense applications have inconsistent support for simple capabilities like Keyhole Markup Language and overlays.  The featureset is paired down to a minimum set of features needed  by part time users of the Team Awareness kit functionality. Think of this as part time Emergency Responders or other volunteers that would all bring their own devices to help with an emergency.
 
