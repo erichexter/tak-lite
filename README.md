@@ -7,10 +7,11 @@ The main objective is to provide consistent GIS Mapping features cross platform,
 Added basic user tracking and updating from multiple TAK servers
 Added capabilities to connect the Alpha Ares application servers, the protocol was reverse engineered.
   - Login
-  - Join existing Game
+  - Join existing Game, including qr code scaning.
 Added certificate enrollment to TAK servers.
 Added ability to load a KML file objects and image overlays.
 Added ability to configure callsign, team (color), role, and subteam for filtering.
+Added ability to scan a QR code to download a TAK connection file, then load it automatically.
 
 
 
